@@ -1,22 +1,41 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PostType } from './post.interface';
-import { NotFoundError } from 'rxjs';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { PostType } from './entities/post.entity';
 
 @Injectable()
 export class PostsService {
-    private readonly posts: PostType[] = [];
+  private readonly posts: PostType[] = [];
 
-    findAll(): PostType[]{
-        return this.posts;
-    }
+  create(createPostDto: CreatePostDto) {
+    const maxId = this.posts.length > 0 
+        ? Math.max(...this.posts.map((post) => +post.id)) : 0;
 
-    create(post: PostType){
-        this.posts.push(post);
+    const newPost: PostType = {
+      ...createPostDto,
+      id: String(maxId + 1)
     }
+    this.posts.push(newPost);
+    return newPost;
+  }
 
-    findById(id: string): PostType{
-        const post = this.posts.find((post) => post.id === id);
-        if(!post) throw new NotFoundException(`Post ${id} not found`);
-        return post;
-    }
+  findAll() {
+    return this.posts;
+  }
+
+  findOne(id: number) {
+    return this.posts[id];
+  }
+
+  update(id: number, updatePostDto: UpdatePostDto) {
+    const index = this.posts.findIndex(post => +post.id === id);
+    if(index === -1) throw new NotFoundException();
+    this.posts[index] = {...this.posts[index], ...updatePostDto}
+    return this.posts[index];
+  }
+
+  remove(id: number) {
+    this.posts.filter(post => +post.id === id)
+    return;
+  }
 }
