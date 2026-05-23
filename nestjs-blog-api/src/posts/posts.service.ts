@@ -24,7 +24,9 @@ export class PostsService {
   }
 
   findOne(id: number) {
-    return this.posts[id];
+    const post = this.posts.find(post => +post.id === id);
+    if(!post) throw new NotFoundException();
+    return post;
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
@@ -35,7 +37,8 @@ export class PostsService {
   }
 
   remove(id: number) {
-    this.posts.filter(post => +post.id === id)
-    return;
+    const index = this.posts.findIndex(post => +post.id === id);
+    if(index === -1) throw new NotFoundException();
+    this.posts.splice(index, 1);
   }
 }
