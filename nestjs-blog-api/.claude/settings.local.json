@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Test-Path \"c:\\\\Users\\\\syout\\\\OneDrive\\\\Desktop\\\\NestjsPrj\\\\nestjs-blog-api\\\\tsconfig.build.json\")"
+    ]
+  }
+}
